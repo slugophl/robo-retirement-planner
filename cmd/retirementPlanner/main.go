@@ -1,11 +1,22 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"os"
+)
 
 func main() {
 
 	var spouseWorking bool
 	var spouseIncome float64
+
+	file, err := os.Create("FIN6776_team_6_retirement_plan.txt")
+	if err != nil {
+		fmt.Println("Error creating the file:", err)
+		return
+	}
+	defer file.Close()
+
 	for {
 
 		fmt.Println("Welcome to retirement planning advisor, please listen to the following prompts.")
@@ -23,7 +34,7 @@ func main() {
 		retirementTargetAmount := getValue("What is the target value you want for your savings?: ")
 		houseOwnership := getBoolValue("Do you own a house or plan to buy one? Please enter y or n: ")
 
-		fmt.Printf(
+		fmt.Fprintf(file,
 			"Your age is %.0f\nYour current income is $%.2f\nYour target retirement age is %.0f\nYour marital status is %t\nIs your spouse working? %t\nYour spouse's income is $%.2f\nNumber of kids: %.0f\nYour target retirement amount is %.2f\nDo you own a house?: %t\n",
 			age, currentIncome, ageToRetire, marritalStatus, spouseWorking, spouseIncome, numOfKids, retirementTargetAmount, houseOwnership)
 		return
