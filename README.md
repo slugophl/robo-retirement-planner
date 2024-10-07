@@ -1,5 +1,7 @@
-# Retirement Planning - FIN6778
+# Retirement Planning - FIN6778 ~ Python Version
 
-## Download the file in bin and you should be able to run it.
+## To Dos
 
-Note the .exe is for windows, linux and mac should be able to run the "roboAdvisor" binary.
+Waiting for math.
+
+Current defaults for the percent allocation -> follows table that is online. Anything <= 25 is equal to 25. Anything >= 75 is equal to 75.
