@@ -27,6 +27,18 @@ def get_float_value(text: str) -> float:
             print("Please enter a valid number.")
 
 
+def get_retirement_value(text: str) -> float:
+    while True:
+        try:
+            user_input: float = float(input(text))
+            if user_input >= 0:
+                return user_input
+            else:
+                print("Enter a non negative value.")
+        except ValueError:
+            print("Please enter a valid number It must be greater than or equal to 0.")
+
+
 def get_gender(text: str) -> str:
     while True:
         try:
@@ -82,8 +94,21 @@ def get_retirement_age(text: str, age: int) -> int:
             )
 
 
-def life_expectancy(age: int) -> float | None:
-    pass
+def investment_per_paycheck(
+    retirement_target: float, years_to_retire: int, principal: float = 0
+) -> float:
+    r: float = 0.07  # This is guestimating an average 7% return
+    n: int = 26  # Bi-weekly paychecks
+    t: int = years_to_retire  # Years to retirement target
+    p: float = principal  # Starting with $0
+    fv: float = retirement_target  # This is what we want in our 401k. (future value)
+
+    # Corrected order of operations
+    numerator: float = fv - p * (1 + r / n) ** (n * t)
+    denominator: float = ((1 + r / n) ** (n * t) - 1) / (r / n)
+
+    contribution: float = numerator / denominator
+    return round(contribution, 2)
 
 
 def allocation(age: int, investment: dict) -> str | None:
@@ -97,7 +122,9 @@ def allocation(age: int, investment: dict) -> str | None:
             age = round_to_nearest_five(age)  # type: ignore
         stocks = investment[age]["stocks"]
         bonds = investment[age]["bonds"]
-        return f"You fall into this investment bracket Age: {age}. Stocks: {stocks}%, Bonds: {bonds}%"
+        return (
+            f"You fall into this Age Bracket: {age}. Stocks: {stocks}%, Bonds: {bonds}%"
+        )
     except ValueError as e:
         print(f"Your value is incorrect {e}")
 
@@ -114,11 +141,17 @@ def main():
         "Please enter the age you would like to retire: ", customer_age
     )
     retirement_countdown: int = years_to_retire(customer_age, retirement_age)
+    saved_amount: float = get_retirement_value(
+        "Please enter the amount of your current 401k you will be transferring. This can also be 0: "
+    )
 
     retirement_target: float = get_float_value(
         "What is the target amount you would like for your retirement account?: "
     )
     your_investment: str = allocation(customer_age, investment_portfolio)  # type: ignore
+    contribution: float = investment_per_paycheck(
+        retirement_target, retirement_countdown, saved_amount
+    )
 
     print(
         f"""
@@ -128,7 +161,8 @@ def main():
         The age you'd like to retire at is {retirement_age}
         The amount of years until you retire is {retirement_countdown}
         Your target for your retirement account is ${retirement_target:.2f}
-        Your allocation should be {your_investment}
+        {your_investment}
+        You would need to contribute ${contribution:.2f} per pay period until retirement.
         """
     )
 
