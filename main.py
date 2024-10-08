@@ -100,10 +100,9 @@ def investment_per_paycheck(
     r: float = 0.07  # This is guestimating an average 7% return
     n: int = 26  # Bi-weekly paychecks
     t: int = years_to_retire  # Years to retirement target
-    p: float = principal  # Starting with $0
+    p: float = principal  # Starting with input, would default to 0.
     fv: float = retirement_target  # This is what we want in our 401k. (future value)
 
-    # Corrected order of operations
     numerator: float = fv - p * (1 + r / n) ** (n * t)
     denominator: float = ((1 + r / n) ** (n * t) - 1) / (r / n)
 
